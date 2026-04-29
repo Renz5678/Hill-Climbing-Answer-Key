@@ -262,19 +262,19 @@ export default function App() {
           {/* slide header */}
           <div style={{
             background: hdrBg,
-            padding: 'clamp(9px, 1.3vh, 16px) clamp(18px, 2.5vw, 36px)',
+            padding: 'clamp(4px, 0.6vh, 8px) clamp(14px, 2vw, 28px)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
           }}>
             <div>
               <div style={{
-                fontSize: 'clamp(20px, 2.4vw, 38px)', fontWeight: 800,
+                fontSize: 'clamp(14px, 1.6vw, 24px)', fontWeight: 800,
                 fontFamily: '"EB Garamond", serif', color: '#fff', letterSpacing: '0.3px',
               }}>
                 {ex.icon}&nbsp; {ex.title}: {ex.subtitle}
               </div>
               <div style={{
-                fontSize: 'clamp(13px, 1.3vw, 19px)', fontWeight: 700,
-                color: 'rgba(255,255,255,0.85)', marginTop: 3,
+                fontSize: 'clamp(11px, 1.1vw, 15px)', fontWeight: 700,
+                color: 'rgba(255,255,255,0.85)', marginTop: 2,
                 fontFamily: 'Tahoma, Arial, sans-serif',
               }}>
                 {phaseLbl} &nbsp;·&nbsp; {ex.tag}
@@ -282,8 +282,8 @@ export default function App() {
             </div>
             <div style={{
               background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.4)',
-              color: '#fff', fontSize: 'clamp(13px, 1.4vw, 20px)', fontWeight: 800,
-              padding: '5px 16px', fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap',
+              color: '#fff', fontSize: 'clamp(12px, 1.2vw, 17px)', fontWeight: 800,
+              padding: '3px 12px', fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap',
             }}>
               {idx + 1} / {TOTAL}
             </div>
