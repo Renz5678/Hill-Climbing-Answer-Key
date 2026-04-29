@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+@import "tailwindcss";
+
+/* ─── Windows 98 Design Tokens ─── */
+:root {
+  --win-silver:   #c0c0c0;
+  --win-light:    #ffffff;
+  --win-dark:     #808080;
+  --win-darkest:  #000000;
+  --win-navy:     #000080;
+  --win-navy2:    #1084d0;
+  --win-maroon:   #800000;
+  --win-btn-face: #d4d0c8;
+  --win-title-bg: linear-gradient(to right, #000080, #1084d0);
+  --slide-bg:     #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 14px;
+  background: #808080;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ─── 3-D Button Look ─── */
+.btn-win {
+  background: var(--win-btn-face);
+  border-top:    2px solid var(--win-light);
+  border-left:   2px solid var(--win-light);
+  border-right:  2px solid var(--win-dark);
+  border-bottom: 2px solid var(--win-dark);
+  padding: 3px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  color: #000;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-win:active {
+  border-top:    2px solid var(--win-dark);
+  border-left:   2px solid var(--win-dark);
+  border-right:  2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+  padding-top: 4px;
+  padding-left: 11px;
+}
+.btn-win:disabled {
+  color: var(--win-dark);
+  cursor: default;
+}
+
+/* ─── Win98 Inset Panel ─── */
+.panel-inset {
+  border-top:    2px solid var(--win-dark);
+  border-left:   2px solid var(--win-dark);
+  border-right:  2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+}
+.panel-raised {
+  border-top:    2px solid var(--win-light);
+  border-left:   2px solid var(--win-light);
+  border-right:  2px solid var(--win-dark);
+  border-bottom: 2px solid var(--win-dark);
+}
+
+/* ─── Title Bar ─── */
+.titlebar {
+  background: var(--win-title-bg);
+  color: #fff;
+  padding: 3px 6px;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  min-height: 22px;
+}
+
+/* ─── Sidebar item ─── */
+.slide-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.slide-item.active {
+  background: var(--win-navy);
+  color: #fff;
+  border-top:    2px solid var(--win-dark);
+  border-left:   2px solid var(--win-dark);
+  border-right:  2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+}
+.slide-item:not(.active):hover { background: #b0b8c8; }
+
+/* ─── Status bar ─── */
+.status-field {
+  border-top:    1px solid var(--win-dark);
+  border-left:   1px solid var(--win-dark);
+  border-right:  1px solid var(--win-light);
+  border-bottom: 1px solid var(--win-light);
+  padding: 1px 6px;
+  background: var(--win-silver);
+  font-size: 13px;
+}
+
+/* ─── Step Log ─── */
+.log-panel {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ─── Slide content area ─── */
+.slide-content {
+  background: #fff;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── Forms and Inputs ─── */
+.win-input {
+  background: var(--win-light);
+  border-top:    2px solid var(--win-darkest);
+  border-left:   2px solid var(--win-darkest);
+  border-right:  2px solid var(--win-btn-face);
+  border-bottom: 2px solid var(--win-btn-face);
+  box-shadow: inset 1px 1px 0px var(--win-dark), 1px 1px 0px var(--win-light);
+  padding: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #000;
+  outline: none;
+  width: 100%;
+}
+
+.win-input:focus {
+  background: #fff;
+}
