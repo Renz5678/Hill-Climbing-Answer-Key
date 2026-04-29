@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import SimulationPanel from './components/SimulationPanel';
+import GraphPanel from './components/GraphPanel';
+import ChessBoard from './components/ChessBoard';
 import { exercises } from './data/exercises';
 
 const slides = [];
@@ -151,7 +153,92 @@ function ProblemSlide({ ex }) {
 }
 
 // ─── Simulation Slide ─────────────────────────────────────────────────────────
-function VariantTabs({ variants }) {
+/**
+ * Wrapper that lays out [visual panel | step log] side by side.
+ * graphConfig  - ex.graph (for graph exercises)
+ * chessConfig  - ex.chess (for chess exercise)
+ * graphPoints  - per-variant override (variants only)
+ * steps / result / rule - forwarded to SimulationPanel
+ */
+function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graphPoints }) {
+  // SimulationPanel exposes activeIdx via a callback
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const [decisionsCompleted, setDecisionsCompleted] = useState(0);
+
+  const handleChange = ({ activeIdx: ai, decisionsCompleted: dc }) => {
+    setActiveIdx(ai);
+    setDecisionsCompleted(dc);
+  };
+
+  // For chess: derive moves and score from decisionsCompleted
+  let chessPanel = null;
+  if (chessConfig) {
+    const movesSoFar = chessConfig.moves.slice(0, decisionsCompleted);
+    const currentScore = chessConfig.scores[decisionsCompleted] ?? chessConfig.scores[chessConfig.scores.length - 1];
+    chessPanel = (
+      <ChessBoard
+        moveHistory={movesSoFar}
+        currentScore={currentScore}
+        goalScore={chessConfig.goalScore}
+      />
+    );
+  }
+
+  // For graph exercises: dot follows activeIdx (current step being examined)
+  let graphPanel = null;
+  if (graphConfig) {
+    const pts = graphPoints ?? graphConfig.points ?? [];
+    graphPanel = (
+      <GraphPanel
+        fn={graphConfig.fn}
+        xMin={graphConfig.xMin}
+        xMax={graphConfig.xMax}
+        yMin={graphConfig.yMin}
+        yMax={graphConfig.yMax}
+        goalY={graphConfig.goalY}
+        label={graphConfig.label}
+        points={pts}
+        activeIdx={activeIdx}
+      />
+    );
+  }
+
+  const visualPanel = chessPanel || graphPanel;
+
+  return (
+    <div style={{
+      display: 'flex', height: '100%', overflow: 'hidden', gap: 0,
+    }}>
+      {/* Left: visual panel */}
+      {visualPanel && (
+        <div style={{
+          flexShrink: 0,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          padding: '10px 8px 10px 10px',
+          background: '#ececec',
+          borderRight: '2px solid #b0b0b0',
+          display: 'flex',
+          alignItems: 'flex-start',
+        }}>
+          {visualPanel}
+        </div>
+      )}
+
+      {/* Right: step log */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <SimulationPanel
+          steps={steps}
+          result={result}
+          rule={rule}
+          onActiveIdxChange={handleChange}
+        />
+      </div>
+    </div>
+  );
+}
+
+function VariantTabs({ variants, graphConfig }) {
   const [tab, setTab] = useState(0);
   const v = variants[tab];
   return (
@@ -178,8 +265,15 @@ function VariantTabs({ variants }) {
           </button>
         ))}
       </div>
-      <div style={{ flex: 1, overflow: 'hidden', padding: '10px 12px' }}>
-        <SimulationPanel key={tab} steps={v.steps} result={v.result} rule={v.rule} />
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <VisualSimulation
+          key={tab}
+          steps={v.steps}
+          result={v.result}
+          rule={v.rule}
+          graphConfig={graphConfig}
+          graphPoints={v.graphPoints}
+        />
       </div>
     </div>
   );
@@ -189,11 +283,14 @@ function SimulationSlide({ ex }) {
   return (
     <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#fff' }}>
       {ex.hasVariants
-        ? <VariantTabs variants={ex.variants} />
+        ? <VariantTabs variants={ex.variants} graphConfig={ex.graph} />
         : (
-          <div style={{ flex: 1, overflow: 'hidden', padding: '10px 12px' }}>
-            <SimulationPanel steps={ex.steps} result={ex.result} />
-          </div>
+          <VisualSimulation
+            steps={ex.steps}
+            result={ex.result}
+            graphConfig={ex.graph}
+            chessConfig={ex.chess}
+          />
         )
       }
     </div>

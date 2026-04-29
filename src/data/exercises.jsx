@@ -13,9 +13,16 @@ const step = (state, checks, decision, type) => ({ state, checks, decision, type
 //   f(4)  = −256 + 512 − 288 + 48 = 16     ✓
 //   f(5)  = −625 + 1000 − 450 + 60 = −15   ✓
 // ══════════════════════════════════════════════════════════════════════════════
+// Graph walk points for Exercise 1
+const ex1GraphPoints = [
+  { x: 0, label: 'x=0' },
+  { x: 1, label: 'x=1' },
+];
+
 const ex1V1 = {
   name: 'Variant 1 — Simple Hill Climbing',
   rule: 'Accept the first neighbor that is strictly better. Check x + 1 first, then x − 1.',
+  graphPoints: ex1GraphPoints,
   steps: [
     step('x = 0  |  f(0) = 0',
       ['Check x + 1 = 1:  f(1) = −1 + 8 − 18 + 12 = 1',
@@ -35,6 +42,7 @@ const ex1V1 = {
 const ex1V2 = {
   name: 'Variant 2 — Steepest Ascent Hill Climbing',
   rule: 'Evaluate ALL neighbors first, then move to the single best one.',
+  graphPoints: ex1GraphPoints,
   steps: [
     step('x = 0  |  f(0) = 0',
       ['Evaluate ALL neighbors:',
@@ -57,6 +65,16 @@ const ex1V2 = {
 const ex1V3 = {
   name: 'Variant 3 — Stochastic Hill Climbing',
   rule: 'Accept a randomly chosen neighbor only if strictly better. Sequence: 1, 2, 1, 3, 4, 5, 4.',
+  graphPoints: [
+    { x: 0, label: 'x=0' },
+    { x: 1, label: 'x=1' },
+    { x: 1, label: 'x=1' },
+    { x: 1, label: 'x=1' },
+    { x: 3, label: 'x=3' },
+    { x: 4, label: 'x=4' },
+    { x: 4, label: 'x=4' },
+    { x: 4, label: 'x=4' },
+  ],
   steps: [
     step('x = 0  |  f(0) = 0',
       ['Random draw: try x = 1',
@@ -99,6 +117,11 @@ const ex1V3 = {
 // ══════════════════════════════════════════════════════════════════════════════
 // EXERCISE 2  Chess  |  Goal = 15  |  Start = 0
 // ══════════════════════════════════════════════════════════════════════════════
+// Chess move applied AFTER each step decision
+// chessMove[i] = move played at end of step i
+const ex2ChessMoves = ['e4', 'Nf3', 'Bc4'];
+const ex2Scores     = [0, 5, 10, 15];
+
 const ex2Steps = [
   step('Score = 0',
     ['Available moves: e4 → 5  |  d4 → 3  |  Nf3 → 7',
@@ -218,6 +241,8 @@ const ex5Steps = [
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
+export { ex2ChessMoves, ex2Scores };
+
 export const exercises = [
   {
     id: 1,
@@ -225,6 +250,13 @@ export const exercises = [
     subtitle: 'Simple Function Optimization',
     tag: 'Hill Climbing — 3 Variants',
     icon: '📐',
+    graph: {
+      fn: x => -(x**4) + 8*(x**3) - 18*(x**2) + 12*x,
+      xMin: -0.5, xMax: 5.5,
+      yMin: -25,  yMax: 22,
+      goalY: 20,
+      label: 'f(x)',
+    },
     problem: {
       desc:  'Given the function f(x) = −x⁴ + 8x³ − 18x² + 12x, where x is a real-valued input, find the maximum value of f(x) starting from x = 0.',
       fn:    'f(x) = −x⁴ + 8x³ − 18x² + 12x',
@@ -235,7 +267,7 @@ export const exercises = [
     },
     hasVariants: true,
     variants: [ex1V1, ex1V2, ex1V3],
-    followUp: 'Stochastic HC produced the best result (f = 16) because the random sequence jumped directly to x = 3, bypassing the valley at f(2) = 0 that permanently trapped both deterministic variants at x = 1. This is the key advantage of stochastic search: the ability to escape local optima.',
+    followUp: 'Compare the results of all three variants. Which produced the best result, and why?',
   },
   {
     id: 2,
@@ -243,6 +275,7 @@ export const exercises = [
     subtitle: 'Chess Position Evaluation',
     tag: 'Simple Hill Climbing',
     icon: '♟',
+    chess: { moves: ex2ChessMoves, scores: ex2Scores, goalScore: 15 },
     problem: {
       desc:  'A chess engine evaluates board positions using a numerical score — the higher the score, the better the position is for White. At each step, only the first move that strictly improves the current score is accepted.',
       fn:    null,
@@ -266,6 +299,19 @@ export const exercises = [
     subtitle: 'Minimization Under Time Constraint',
     tag: 'Simple Hill Climbing (minimisation)',
     icon: '⏱',
+    graph: {
+      fn: x => x**2 - 6*x + 10,
+      xMin: -0.5, xMax: 5.5,
+      yMin: -0.5,  yMax: 12,
+      goalY: 0,
+      label: 'f(x)',
+      points: [
+        { x: 0, label: 'x=0' },
+        { x: 1, label: 'x=1' },
+        { x: 2, label: 'x=2' },
+        { x: 3, label: 'x=3' },
+      ],
+    },
     problem: {
       desc:  'Given the function f(x) = x² − 6x + 10, where x is a real-valued input, find the minimum value of f(x) starting from x = 0. Each operator application costs 10ms, and the algorithm must stop immediately once elapsed time reaches 60ms.',
       fn:    'f(x) = x² − 6x + 10',
@@ -277,7 +323,7 @@ export const exercises = [
     hasVariants: false,
     steps: ex3Steps,
     result: { text: 'x = 3,  f(x) = 1,  t = 30 ms', reached: false, note: 'Stopped at local minimum — goal f = 0 has no real solution (discriminant < 0). Time was NOT the limiting factor.' },
-    followUp: 'Only 30 ms of the 60 ms budget was consumed. The algorithm halted because x = 3 is a true local (and global) minimum of f(x) = x² − 6x + 10. Since the discriminant 36 − 40 = −4 < 0, the equation f(x) = 0 has no real roots. The goal was mathematically impossible, not limited by time.',
+    followUp: 'Did the algorithm find the minimum within the time limit? If not, at what point did it terminate, and how much time would full convergence require?',
   },
   {
     id: 4,
@@ -285,6 +331,21 @@ export const exercises = [
     subtitle: 'Optimal Irrigation Schedule',
     tag: 'Simple Hill Climbing',
     icon: '🌾',
+    graph: {
+      fn: i => (-5)*(i**2) + 50*i,
+      xMin: -0.5, xMax: 7,
+      yMin: -10,   yMax: 140,
+      goalY: 150,
+      label: 'Y(i)',
+      points: [
+        { x: 0, label: 'i=0' },
+        { x: 1, label: 'i=1' },
+        { x: 2, label: 'i=2' },
+        { x: 3, label: 'i=3' },
+        { x: 4, label: 'i=4' },
+        { x: 5, label: 'i=5' },
+      ],
+    },
     problem: {
       desc:  'A farmer wants to maximize weekly crop yield by adjusting irrigation frequency. The yield is modeled by Y(i) = −5i² + 50i, where i is the number of irrigations per week and Y(i) is the weekly yield in kg.',
       fn:    'Y(i) = −5i² + 50i',
@@ -303,6 +364,21 @@ export const exercises = [
     subtitle: 'Minimizing Cumulative Algorithm Cost',
     tag: 'Simple Hill Climbing',
     icon: '⚙',
+    graph: {
+      fn: n => n*(n+1)*(2*n+1)/6,
+      xMin: 0.5, xMax: 7.5,
+      yMin: -5,   yMax: 160,
+      goalY: 100,
+      label: 'C(n)',
+      points: [
+        { x: 1, label: 'n=1' },
+        { x: 2, label: 'n=2' },
+        { x: 3, label: 'n=3' },
+        { x: 4, label: 'n=4' },
+        { x: 5, label: 'n=5' },
+        { x: 6, label: 'n=6' },
+      ],
+    },
     problem: {
       desc:  'A computer science student is benchmarking cumulative computational cost as more algorithms are added to a pipeline. The total cost at pipeline length n is defined by C(n) = n(n+1)(2n+1)/6, where n is the number of algorithms in the pipeline and C(n) is the total number of operations. The student wants to find the pipeline length where cumulative cost first meets or exceeds a budget of 100 operations.',
       fn:    'C(n) = n(n + 1)(2n + 1) / 6',
@@ -315,6 +391,6 @@ export const exercises = [
     hasVariants: false,
     steps: ex5Steps,
     result: { text: 'n = 6,  C(n) = 91', reached: false, note: 'No integer n satisfies C(n) = 100 exactly. Algorithm stops just below target.' },
-    followUp: 'C(6) = 91 and C(7) = 140. Since 140 overshoots the exact goal of 100, neither direction qualifies as an improving move. This reveals a fundamental limitation of hill climbing in discrete spaces: when the goal falls between two discrete states, the algorithm halts just below the target. Goals should be defined as ranges (e.g., C(n) ≥ 100) rather than requiring an exact match.',
+    followUp: 'Since no pipeline length gives exactly C(n) = 100, the algorithm cannot reach the goal precisely. At what value of n does it stop, and what does this reveal about using exact target values in discrete search spaces?',
   },
 ];

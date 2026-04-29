@@ -54,7 +54,7 @@ function nextLabel(nextCursor, map, atEnd) {
   return '▶ Next';
 }
 
-export default function SimulationPanel({ steps, result, rule }) {
+export default function SimulationPanel({ steps, result, rule, onActiveIdxChange }) {
   const [cursor, setCursor] = useState(0);
   const endRef = useRef(null);
 
@@ -67,6 +67,13 @@ export default function SimulationPanel({ steps, result, rule }) {
   const phase   = currentPhase(cursor, map);
   const activeIdx = phase?.stepIdx ?? -1;
   const btnLabel  = nextLabel(cursor + 1, map, atEnd);
+
+  // Notify parent of activeIdx changes
+  useEffect(() => {
+    // Count how many steps have their decision revealed
+    const decisionsCompleted = map.filter(({ decisionAt }) => cursor >= decisionAt).length;
+    onActiveIdxChange?.({ activeIdx, decisionsCompleted });
+  }, [activeIdx, cursor]);
 
   // Phase pill label
   const phasePill = !phase ? null
