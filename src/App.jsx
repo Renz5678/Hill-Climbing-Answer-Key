@@ -4,7 +4,37 @@ import GraphPanel from './components/GraphPanel';
 import ChessBoard from './components/ChessBoard';
 import { exercises } from './data/exercises';
 
-const slides = [];
+const infoSlides = [
+  {
+    phase: 'info',
+    title: 'Heuristic Algorithm',
+    subtitle: 'What Is a Heuristic Algorithm?',
+    tag: 'Background Concept',
+    body: 'An algorithm that uses practical strategies or rules of thumb to find a good or acceptable solution quickly, trading off guaranteed optimality for speed and reduced computation time.',
+    citation: 'Hawaou et al., 2023',
+    keyPoints: [
+      { label: 'Speed', text: 'Finds acceptable solutions much faster than exhaustive search methods.' },
+      { label: 'Trade-off', text: 'Sacrifices the guarantee of finding the perfect optimal solution.' },
+      { label: 'Rule of Thumb', text: 'Uses practical, intuitive strategies rather than mathematically exhaustive proofs.' },
+      { label: 'Scalability', text: 'Handles large, complex problems where exact algorithms are computationally infeasible.' },
+    ],
+  },
+  {
+    phase: 'info',
+    title: 'Hill Climbing as a Heuristic',
+    subtitle: 'Why Hill Climbing Is a Heuristic Algorithm',
+    tag: 'Core Concept',
+    body: 'Hill climbing qualifies as a heuristic algorithm because it uses a simple rule of thumb — always move to a better neighboring solution — to find an acceptable answer quickly without exhaustively searching the entire solution space, and does not guarantee the optimal solution as it can get trapped at local optima.',
+    keyPoints: [
+      { label: 'Rule of Thumb', text: 'Always move to a strictly better neighboring solution — no complex analysis required.' },
+      { label: 'No Exhaustive Search', text: 'Ignores the full solution space and only looks at immediate neighbors.' },
+      { label: 'Local Optima Risk', text: 'Can get stuck at a local maximum/minimum, unable to see a better global solution.' },
+      { label: 'Acceptable Answer', text: 'Quickly reaches a good-enough solution, making it practical for real-world use.' },
+    ],
+  },
+];
+
+const slides = [...infoSlides];
 exercises.forEach((ex, i) => {
   slides.push({ phase: 'problem',    ex, exIndex: i });
   slides.push({ phase: 'simulation', ex, exIndex: i });
@@ -17,14 +47,16 @@ function SlideDots({ current, onChange }) {
     <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
       {slides.map((s, i) => {
         const isActive  = i === current;
+        const isInfo    = s.phase === 'info';
         const isProblem = s.phase === 'problem';
+        const bg = isActive ? '#000080' : isInfo ? '#7c3aed' : isProblem ? '#8ab4e0' : '#507090';
         return (
           <button key={i} onClick={() => onChange(i)}
-            title={`Ex ${s.exIndex + 1} — ${s.phase}`}
+            title={isInfo ? s.subtitle : `Ex ${s.exIndex + 1} — ${s.phase}`}
             style={{
               width: isActive ? 28 : 10, height: 10,
-              borderRadius: isProblem ? 2 : 5,
-              background: isActive ? '#000080' : (isProblem ? '#8ab4e0' : '#507090'),
+              borderRadius: isInfo ? 5 : isProblem ? 2 : 5,
+              background: bg,
               border: isActive ? '2px solid #000080' : '1px solid #aaa',
               cursor: 'pointer', padding: 0, transition: 'all 0.15s', outline: 'none',
             }} />
@@ -34,17 +66,103 @@ function SlideDots({ current, onChange }) {
   );
 }
 
+// ─── Info Slide ───────────────────────────────────────────────────────────────
+function InfoSlide({ slide }) {
+  return (
+    <div style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      padding: '16px 32px 14px',
+      gap: 14,
+      background: '#fff',
+    }}>
+
+      {/* Main definition block */}
+      <div style={{
+        background: 'linear-gradient(135deg, #000080 0%, #1084d0 60%, #0050a0 100%)',
+        borderRadius: 6,
+        padding: '16px 24px',
+        flexShrink: 0,
+      }}>
+        <div style={{
+          fontSize: 'clamp(11px, 1vw, 14px)', fontWeight: 700,
+          color: 'rgba(255,255,255,0.75)', fontFamily: 'Tahoma, Arial, sans-serif',
+          textTransform: 'uppercase', letterSpacing: '2px', marginBottom: 8,
+        }}>
+          Definition
+        </div>
+        <div style={{
+          fontSize: 'clamp(16px, 1.8vw, 26px)', fontWeight: 700, lineHeight: 1.5,
+          color: '#fff', fontFamily: 'Tahoma, Arial, sans-serif',
+        }}>
+          {slide.body}
+        </div>
+        {slide.citation && (
+          <div style={{
+            marginTop: 10,
+            fontSize: 'clamp(12px, 1.1vw, 16px)', fontWeight: 600,
+            color: 'rgba(255,255,255,0.65)', fontFamily: 'Tahoma, Arial, sans-serif',
+            fontStyle: 'italic',
+          }}>
+            ({slide.citation})
+          </div>
+        )}
+      </div>
+
+      {/* Key points grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: 12,
+        flex: 1,
+        overflow: 'hidden',
+      }}>
+        {slide.keyPoints.map(({ label, text }) => (
+          <div key={label} style={{
+            background: '#f4f6fb',
+            border: '1px solid #d1d9f0',
+            borderLeft: '5px solid #000080',
+            borderRadius: 4,
+            padding: '14px 18px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{
+                fontSize: 'clamp(13px, 1.3vw, 19px)', fontWeight: 800,
+                color: '#000080', fontFamily: 'Tahoma, Arial, sans-serif',
+                textTransform: 'uppercase', letterSpacing: '1px',
+              }}>
+                {label}
+              </span>
+            </div>
+            <div style={{
+              fontSize: 'clamp(13px, 1.35vw, 20px)', fontWeight: 600, lineHeight: 1.5,
+              color: '#222', fontFamily: 'Tahoma, Arial, sans-serif',
+            }}>
+              {text}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Problem Slide ─────────────────────────────────────────────────────────────
 function ProblemSlide({ ex }) {
   const p = ex.problem;
 
   const facts = [
-    { label: '🎯  Goal',      value: p.goal  },
-    { label: '🔰  Start',     value: p.start },
-    { label: '⚙️  Operators', value: p.ops   },
+    { label: 'Goal',      value: p.goal  },
+    { label: 'Start',     value: p.start },
+    { label: 'Operators', value: p.ops   },
   ];
-  if (p.rule) facts.push({ label: '📏  Rule', value: p.rule });
-  else        facts.push({ label: '📋  Algorithm', value: ex.tag });
+  if (p.rule) facts.push({ label: 'Rule',      value: p.rule });
+  else        facts.push({ label: 'Algorithm', value: ex.tag });
 
   return (
     <div style={{
@@ -301,7 +419,8 @@ function SimulationSlide({ ex }) {
 export default function App() {
   const [idx, setIdx] = useState(0);
   const slide = slides[idx];
-  const { ex, phase } = slide;
+  const { phase } = slide;
+  const ex = slide.ex ?? null;
 
   const prev = () => setIdx(i => Math.max(0, i - 1));
   const next = () => setIdx(i => Math.min(TOTAL - 1, i + 1));
@@ -315,10 +434,9 @@ export default function App() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
+  const isInfo = phase === 'info';
   const isProb = phase === 'problem';
-  const hdrBg  = isProb
-    ? '#000080'
-    : '#14532d';
+  const hdrBg  = '#000080';
 
   return (
     <div style={{
@@ -337,14 +455,19 @@ export default function App() {
             fontSize: 'clamp(13px, 1.5vw, 20px)', fontWeight: 800,
             fontFamily: 'Tahoma, Arial, sans-serif', color: '#fff',
           }}>
-            {ex.icon} {ex.title}: {ex.subtitle}
+            {isInfo ? slide.title : `${ex.title}: ${ex.subtitle}`}
           </span>
           <span style={{
             fontSize: 'clamp(11px, 1.1vw, 14px)', fontWeight: 600,
             color: 'rgba(255,255,255,0.70)', marginLeft: 14,
             fontFamily: 'Tahoma, Arial, sans-serif',
           }}>
-            {isProb ? '📋 Problem Statement' : '▶ Step-by-Step Simulation'} · {ex.tag}
+            {isInfo
+              ? `Concept · ${slide.tag}`
+              : isProb
+                ? `Problem Statement · ${ex.tag}`
+                : `Step-by-Step Simulation · ${ex.tag}`
+            }
           </span>
         </div>
         <span style={{
@@ -358,9 +481,11 @@ export default function App() {
 
       {/* ── Slide body ── */}
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {isProb
-          ? <ProblemSlide ex={ex} />
-          : <SimulationSlide key={ex.id} ex={ex} />
+        {isInfo
+          ? <InfoSlide slide={slide} />
+          : isProb
+            ? <ProblemSlide ex={ex} />
+            : <SimulationSlide key={ex.id} ex={ex} />
         }
       </div>
 

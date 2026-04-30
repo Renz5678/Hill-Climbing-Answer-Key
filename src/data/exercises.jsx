@@ -249,7 +249,6 @@ export const exercises = [
     title: 'Exercise 1',
     subtitle: 'Simple Function Optimization',
     tag: 'Hill Climbing — 3 Variants',
-    icon: '📐',
     graph: {
       fn: x => -(x**4) + 8*(x**3) - 18*(x**2) + 12*x,
       xMin: -0.5, xMax: 5.5,
@@ -274,7 +273,6 @@ export const exercises = [
     title: 'Exercise 2',
     subtitle: 'Chess Position Evaluation',
     tag: 'Simple Hill Climbing',
-    icon: '♟',
     chess: { moves: ex2ChessMoves, scores: ex2Scores, goalScore: 15 },
     problem: {
       desc:  'A chess engine evaluates board positions using a numerical score — the higher the score, the better the position is for White. At each step, only the first move that strictly improves the current score is accepted.',
@@ -298,7 +296,6 @@ export const exercises = [
     title: 'Exercise 3',
     subtitle: 'Minimization Under Time Constraint',
     tag: 'Simple Hill Climbing (minimisation)',
-    icon: '⏱',
     graph: {
       fn: x => x**2 - 6*x + 10,
       xMin: -0.5, xMax: 5.5,
@@ -330,7 +327,6 @@ export const exercises = [
     title: 'Exercise 4',
     subtitle: 'Optimal Irrigation Schedule',
     tag: 'Simple Hill Climbing',
-    icon: '🌾',
     graph: {
       fn: i => (-5)*(i**2) + 50*i,
       xMin: -0.5, xMax: 7,
@@ -363,7 +359,6 @@ export const exercises = [
     title: 'Exercise 5',
     subtitle: 'Minimizing Cumulative Algorithm Cost',
     tag: 'Simple Hill Climbing',
-    icon: '⚙',
     graph: {
       fn: n => n*(n+1)*(2*n+1)/6,
       xMin: 0.5, xMax: 7.5,
