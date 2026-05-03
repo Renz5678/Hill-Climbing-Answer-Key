@@ -13,6 +13,8 @@
   --win-btn-face: #d4d0c8;
   --win-title-bg: linear-gradient(to right, #000080, #1084d0);
   --slide-bg:     #ffffff;
+  /* Viewport height that accounts for mobile browser chrome */
+  --app-height: 100dvh;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,8 +23,10 @@ body {
   font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
   font-size: 14px;
   background: #808080;
-  overflow: hidden;
-  height: 100vh;
+  /* Allow scrolling on very small screens if content overflows */
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: var(--app-height);
   width: 100vw;
 }
 

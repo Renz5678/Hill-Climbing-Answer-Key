@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SimulationPanel from './components/SimulationPanel';
 import GraphPanel from './components/GraphPanel';
 import ChessBoard from './components/ChessBoard';
 import { exercises } from './data/exercises';
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(() => window.innerWidth);
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return width;
+}
 
 const infoSlides = [
   {
@@ -74,8 +84,8 @@ function InfoSlide({ slide }) {
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
-      padding: '16px 32px 14px',
-      gap: 14,
+      padding: 'clamp(10px, 2vw, 16px) clamp(12px, 3vw, 32px) 14px',
+      gap: 12,
       background: '#fff',
     }}>
 
@@ -114,10 +124,11 @@ function InfoSlide({ slide }) {
       {/* Key points grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: 12,
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
+        gap: 10,
         flex: 1,
-        overflow: 'hidden',
+        overflowY: 'auto',
+        overflowX: 'hidden',
       }}>
         {slide.keyPoints.map(({ label, text }) => (
           <div key={label} style={{
@@ -169,9 +180,10 @@ function ProblemSlide({ ex }) {
       flex: 1,
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden',
-      padding: '16px 32px 12px',
-      gap: 12,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      padding: 'clamp(10px, 2vw, 16px) clamp(12px, 3vw, 32px) 12px',
+      gap: 10,
       background: '#fff',
     }}>
 
@@ -198,10 +210,10 @@ function ProblemSlide({ ex }) {
       )}
 
       {/* Key facts */}
-      <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap' }}>
         {facts.map(({ label, value }) => (
           <div key={label} style={{
-            flex: 1, background: '#f4f6fb', padding: '10px 16px',
+            flex: '1 1 120px', background: '#f4f6fb', padding: '8px 14px',
             border: '1px solid #d1d9f0', borderRadius: 4, minWidth: 0,
           }}>
             <div style={{
@@ -222,11 +234,11 @@ function ProblemSlide({ ex }) {
 
       {/* Moves table (Exercise 2 only) */}
       {p.movesTable && (
-        <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap' }}>
           {p.movesTable.map(({ step, from, moves }) => (
             <div key={step} style={{
-              flex: 1, background: '#fafafa', padding: '10px 14px',
-              border: '1px solid #ddd', borderRadius: 4,
+              flex: '1 1 140px', background: '#fafafa', padding: '8px 12px',
+              border: '1px solid #ddd', borderRadius: 4, minWidth: 0,
             }}>
               <div style={{ fontSize: 'clamp(12px, 1.1vw, 16px)', fontWeight: 800, color: '#000080', marginBottom: 4 }}>
                 Step {step}&nbsp;
@@ -279,6 +291,9 @@ function ProblemSlide({ ex }) {
  * steps / result / rule - forwarded to SimulationPanel
  */
 function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graphPoints }) {
+  const windowWidth = useWindowWidth();
+  const isNarrow = windowWidth < 640;
+
   // SimulationPanel exposes activeIdx via a callback
   const [activeIdx, setActiveIdx] = useState(-1);
   const [decisionsCompleted, setDecisionsCompleted] = useState(0);
@@ -298,6 +313,7 @@ function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graph
         moveHistory={movesSoFar}
         currentScore={currentScore}
         goalScore={chessConfig.goalScore}
+        compact={isNarrow}
       />
     );
   }
@@ -317,6 +333,7 @@ function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graph
         label={graphConfig.label}
         points={pts}
         activeIdx={activeIdx}
+        compact={isNarrow}
       />
     );
   }
@@ -325,26 +342,33 @@ function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graph
 
   return (
     <div style={{
-      display: 'flex', height: '100%', overflow: 'hidden', gap: 0,
+      display: 'flex',
+      flexDirection: isNarrow ? 'column' : 'row',
+      height: '100%',
+      overflow: 'hidden',
+      gap: 0,
     }}>
-      {/* Left: visual panel */}
+      {/* Visual panel — top on mobile, left on desktop */}
       {visualPanel && (
         <div style={{
           flexShrink: 0,
           overflowY: 'auto',
           overflowX: 'hidden',
-          padding: '10px 8px 10px 10px',
+          padding: isNarrow ? '8px' : '10px 8px 10px 10px',
           background: '#ececec',
-          borderRight: '2px solid #b0b0b0',
+          borderBottom: isNarrow ? '2px solid #b0b0b0' : 'none',
+          borderRight: isNarrow ? 'none' : '2px solid #b0b0b0',
           display: 'flex',
           alignItems: 'flex-start',
+          justifyContent: isNarrow ? 'center' : 'flex-start',
+          maxHeight: isNarrow ? '45%' : 'none',
         }}>
           {visualPanel}
         </div>
       )}
 
-      {/* Right: step log */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
+      {/* Step log */}
+      <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
         <SimulationPanel
           steps={steps}
           result={result}
@@ -358,28 +382,30 @@ function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graph
 
 function VariantTabs({ variants, graphConfig }) {
   const [tab, setTab] = useState(0);
+  const windowWidth = useWindowWidth();
   const v = variants[tab];
+  const tabLabels = ['Simple', 'Steepest Ascent', 'Stochastic'];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
       {/* Tabs */}
       <div style={{
         display: 'flex', borderBottom: '2px solid #c0c0c0', flexShrink: 0,
-        background: '#f0f0f0', padding: '4px 8px 0', gap: 4,
+        background: '#f0f0f0', padding: '4px 6px 0', gap: 3, overflowX: 'auto',
       }}>
         {variants.map((vt, i) => (
           <button key={i} onClick={() => setTab(i)} style={{
-            fontSize: 'clamp(12px, 1.2vw, 16px)', fontWeight: tab === i ? 800 : 600,
-            padding: '6px 20px',
+            fontSize: 'clamp(11px, 1.2vw, 15px)', fontWeight: tab === i ? 800 : 600,
+            padding: windowWidth < 480 ? '5px 10px' : '6px 18px',
             background: tab === i ? '#fff' : 'transparent',
             color: tab === i ? '#000080' : '#555',
             border: tab === i ? '1px solid #c0c0c0' : '1px solid transparent',
             borderBottom: tab === i ? '2px solid #fff' : 'none',
-            cursor: 'pointer',
+            cursor: 'pointer', whiteSpace: 'nowrap',
             fontFamily: 'Tahoma, Arial, sans-serif',
             marginBottom: tab === i ? -2 : 0,
             transition: 'all 0.1s',
           }}>
-            V{i + 1} — {['Simple', 'Steepest Ascent', 'Stochastic'][i]}
+            {windowWidth < 480 ? `V${i + 1}` : `V${i + 1} — ${tabLabels[i]}`}
           </button>
         ))}
       </div>
@@ -440,27 +466,29 @@ export default function App() {
 
   return (
     <div style={{
-      width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column',
+      width: '100vw', height: '100dvh', display: 'flex', flexDirection: 'column',
       background: '#e8e8e8', overflow: 'hidden', margin: 0, padding: 0,
     }}>
 
       {/* ── Compact header ── */}
       <div style={{
         background: hdrBg,
-        padding: '6px 20px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
+        padding: '5px 12px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        flexShrink: 0, flexWrap: 'wrap', gap: 4,
       }}>
-        <div>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <span style={{
-            fontSize: 'clamp(13px, 1.5vw, 20px)', fontWeight: 800,
+            fontSize: 'clamp(12px, 1.5vw, 20px)', fontWeight: 800,
             fontFamily: 'Tahoma, Arial, sans-serif', color: '#fff',
+            display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
           }}>
             {isInfo ? slide.title : `${ex.title}: ${ex.subtitle}`}
           </span>
           <span style={{
-            fontSize: 'clamp(11px, 1.1vw, 14px)', fontWeight: 600,
-            color: 'rgba(255,255,255,0.70)', marginLeft: 14,
-            fontFamily: 'Tahoma, Arial, sans-serif',
+            fontSize: 'clamp(10px, 1.1vw, 14px)', fontWeight: 600,
+            color: 'rgba(255,255,255,0.70)',
+            fontFamily: 'Tahoma, Arial, sans-serif', display: 'block',
           }}>
             {isInfo
               ? `Concept · ${slide.tag}`
@@ -471,9 +499,9 @@ export default function App() {
           </span>
         </div>
         <span style={{
-          color: 'rgba(255,255,255,0.85)', fontSize: 'clamp(12px, 1.2vw, 16px)',
-          fontWeight: 800, fontFamily: 'Tahoma, Arial, sans-serif',
-          background: 'rgba(255,255,255,0.12)', padding: '2px 10px', borderRadius: 3,
+          color: 'rgba(255,255,255,0.85)', fontSize: 'clamp(11px, 1.2vw, 16px)',
+          fontWeight: 800, fontFamily: 'Tahoma, Arial, sans-serif', flexShrink: 0,
+          background: 'rgba(255,255,255,0.12)', padding: '2px 8px', borderRadius: 3,
         }}>
           {idx + 1} / {TOTAL}
         </span>
@@ -492,30 +520,30 @@ export default function App() {
       {/* ── Navigation bar ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '6px 12px', flexShrink: 0, background: '#d8d8d8',
-        borderTop: '1px solid #b0b0b0',
+        padding: '5px 8px', flexShrink: 0, background: '#d8d8d8',
+        borderTop: '1px solid #b0b0b0', gap: 6,
       }}>
         <button onClick={prev} disabled={idx === 0} style={{
-          fontSize: 'clamp(12px, 1.3vw, 17px)', fontWeight: 800,
-          padding: '5px 20px', cursor: idx === 0 ? 'default' : 'pointer',
-          background: idx === 0 ? '#c8c8c8' : '#fff',
+          fontSize: 'clamp(11px, 1.3vw, 17px)', fontWeight: 800,
+          padding: '4px 12px', cursor: idx === 0 ? 'default' : 'pointer',
+          background: idx === 0 ? '#c8c8c8' : '#fff', flexShrink: 0,
           border: '1px solid #999', color: idx === 0 ? '#999' : '#000080',
           fontFamily: 'Tahoma, Arial, sans-serif',
         }}>
-          ◀ Previous
+          ◀ Prev
         </button>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flex: 1, minWidth: 0, overflow: 'hidden' }}>
           <SlideDots current={idx} onChange={setIdx} />
-          <span style={{ fontSize: 11, fontWeight: 600, color: '#666', fontFamily: 'Tahoma, Arial, sans-serif' }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: '#666', fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap' }}>
             □ = Problem &nbsp;·&nbsp; ● = Simulation
           </span>
         </div>
 
         <button onClick={next} disabled={idx === TOTAL - 1} style={{
-          fontSize: 'clamp(12px, 1.3vw, 17px)', fontWeight: 800,
-          padding: '5px 20px', cursor: idx === TOTAL - 1 ? 'default' : 'pointer',
-          background: idx === TOTAL - 1 ? '#c8c8c8' : '#000080',
+          fontSize: 'clamp(11px, 1.3vw, 17px)', fontWeight: 800,
+          padding: '4px 12px', cursor: idx === TOTAL - 1 ? 'default' : 'pointer',
+          background: idx === TOTAL - 1 ? '#c8c8c8' : '#000080', flexShrink: 0,
           border: '1px solid #999', color: idx === TOTAL - 1 ? '#999' : '#fff',
           fontFamily: 'Tahoma, Arial, sans-serif',
         }}>

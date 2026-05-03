@@ -69,12 +69,12 @@ function applyMoves(moveNames) {
   return { board, lastTo: highlights[highlights.length - 1] || null };
 }
 
-export default function ChessBoard({ moveHistory = [], currentScore = 0, goalScore = 15 }) {
+export default function ChessBoard({ moveHistory = [], currentScore = 0, goalScore = 15, compact = false }) {
   const { board, lastTo } = applyMoves(moveHistory);
 
-  const CELL = 34; // px per square
-  const BORDER = 4;
-  const LABEL_W = 16;
+  const CELL    = compact ? 26 : 34; // px per square
+  const BORDER  = 4;
+  const LABEL_W = compact ? 14 : 16;
 
   const progress = Math.min(currentScore / goalScore, 1);
 

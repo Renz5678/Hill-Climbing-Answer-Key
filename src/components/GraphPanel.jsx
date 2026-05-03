@@ -16,13 +16,14 @@ import React, { useEffect, useRef } from 'react';
 export default function GraphPanel({
   fn, xMin = -1, xMax = 6, yMin, yMax,
   goalY = null, points = [], activeIdx = -1, label = 'f(x)',
+  compact = false,
 }) {
   const svgRef = useRef(null);
 
   // ── layout constants ───────────────────────────────────────────────────────
   const PAD   = { top: 22, right: 18, bottom: 36, left: 46 };
-  const W     = 340;
-  const H     = 240;
+  const W     = compact ? 240 : 340;
+  const H     = compact ? 180 : 240;
   const IW    = W - PAD.left - PAD.right;
   const IH    = H - PAD.top  - PAD.bottom;
 

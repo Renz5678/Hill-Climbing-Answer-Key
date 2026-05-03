@@ -109,13 +109,13 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
       {/* Controls */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '6px 14px', background: '#f4f4f4', borderBottom: '1px solid #ddd',
-        flexShrink: 0, gap: 12,
+        padding: '5px 10px', background: '#f4f4f4', borderBottom: '1px solid #ddd',
+        flexShrink: 0, gap: 8, flexWrap: 'wrap',
       }}>
         {/* Counter + phase pill */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{
-            fontSize: 'clamp(13px, 1.35vw, 18px)', fontWeight: 700,
+            fontSize: 'clamp(12px, 1.35vw, 18px)', fontWeight: 700,
             color: '#333', fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap',
           }}>
             {activeIdx < 0 ? `— / ${steps.length}` : `Step ${activeIdx + 1} / ${steps.length}`}
@@ -123,9 +123,9 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
           {phasePill && (
             <span style={{
               fontSize: 'clamp(10px, 1vw, 13px)', fontWeight: 700,
-              padding: '2px 10px', borderRadius: 20,
+              padding: '2px 8px', borderRadius: 20,
               background: '#000080', color: '#fff',
-              fontFamily: 'Tahoma, Arial, sans-serif',
+              fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap',
             }}>
               {phasePill}
             </span>
@@ -133,7 +133,7 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
         </div>
 
         {/* Buttons */}
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
           {btn('↺ Reset',    () => setCursor(0),                         cursor === 0)}
           {btn('◀',          () => setCursor(c => Math.max(0, c - 1)),   cursor === 0)}
           {btn(btnLabel,     () => setCursor(c => Math.min(maxCursor, c + 1)), atEnd, true)}
