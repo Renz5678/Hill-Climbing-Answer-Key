@@ -85,14 +85,15 @@ export default function ChessBoard({ moveHistory = [], currentScore = 0, goalSco
     }}>
       {/* Windows XP title bar */}
       <div style={{
-        background: 'linear-gradient(180deg, #3a6fc4 0%, #1a50a0 45%, #1a50a0 55%, #2060b8 100%)',
+        background: 'linear-gradient(180deg, #1a6bd8 0%, #0050c0 45%, #0050c0 55%, #1462cc 100%)',
         borderRadius: '3px 3px 0 0',
         padding: '3px 6px',
         display: 'flex', alignItems: 'center', gap: 6,
         marginBottom: 0,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.35)',
       }}>
         <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', textShadow: '1px 1px 1px rgba(0,0,0,0.5)' }}>
-          ♟ Chess Board — Position Evaluation
+          Chess Board — Position Evaluation
         </span>
       </div>
 

@@ -64,19 +64,24 @@ export default function GraphPanel({
 
   return (
     <div style={{
-      background: '#f8f9fa',
-      border: '2px inset #a0a0a0',
+      background: '#f3f2ee',
+      border: '2px solid',
+      borderColor: '#aca899 #fff #fff #aca899',
       borderRadius: 0,
       padding: '6px 6px 2px',
       userSelect: 'none',
       fontFamily: 'Tahoma, Arial, sans-serif',
+      boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.9)',
     }}>
       {/* Title bar */}
       <div style={{
-        background: '#000080', color: '#fff',
+        background: 'linear-gradient(180deg, #1a6bd8 0%, #0050c0 45%, #0050c0 55%, #1462cc 100%)',
+        color: '#fff',
         fontSize: 11, fontWeight: 700,
         padding: '2px 6px', marginBottom: 6,
         letterSpacing: 0.5,
+        textShadow: '1px 1px 1px rgba(0,0,0,0.5)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
       }}>
         Graph — {label}
       </div>

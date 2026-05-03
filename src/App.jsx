@@ -59,7 +59,7 @@ function SlideDots({ current, onChange }) {
         const isActive  = i === current;
         const isInfo    = s.phase === 'info';
         const isProblem = s.phase === 'problem';
-        const bg = isActive ? '#000080' : isInfo ? '#7c3aed' : isProblem ? '#8ab4e0' : '#507090';
+        const bg = isActive ? '#1460c8' : isInfo ? '#7c3aed' : isProblem ? '#8ab4e0' : '#507090';
         return (
           <button key={i} onClick={() => onChange(i)}
             title={isInfo ? s.subtitle : `Ex ${s.exIndex + 1} — ${s.phase}`}
@@ -67,7 +67,7 @@ function SlideDots({ current, onChange }) {
               width: isActive ? 28 : 10, height: 10,
               borderRadius: isInfo ? 5 : isProblem ? 2 : 5,
               background: bg,
-              border: isActive ? '2px solid #000080' : '1px solid #aaa',
+              border: isActive ? '2px solid #0844a4' : '1px solid #999',
               cursor: 'pointer', padding: 0, transition: 'all 0.15s', outline: 'none',
             }} />
         );
@@ -86,15 +86,16 @@ function InfoSlide({ slide }) {
       overflow: 'hidden',
       padding: 'clamp(10px, 2vw, 16px) clamp(12px, 3vw, 32px) 14px',
       gap: 12,
-      background: '#fff',
+      background: '#ece9d8',
     }}>
 
       {/* Main definition block */}
       <div style={{
-        background: 'linear-gradient(135deg, #000080 0%, #1084d0 60%, #0050a0 100%)',
-        borderRadius: 6,
+        background: 'linear-gradient(180deg, #1a6bd8 0%, #0050c0 45%, #0050c0 55%, #1462cc 100%)',
+        borderRadius: 3,
         padding: '16px 24px',
         flexShrink: 0,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.35)',
       }}>
         <div style={{
           fontSize: 'clamp(11px, 1vw, 14px)', fontWeight: 700,
@@ -132,14 +133,15 @@ function InfoSlide({ slide }) {
       }}>
         {slide.keyPoints.map(({ label, text }) => (
           <div key={label} style={{
-            background: '#f4f6fb',
-            border: '1px solid #d1d9f0',
-            borderLeft: '5px solid #000080',
-            borderRadius: 4,
+            background: '#f3f2ee',
+            border: '1px solid',
+            borderColor: '#aca899 #fff #fff #aca899',
+            borderLeft: '5px solid #1460c8',
             padding: '14px 18px',
             display: 'flex',
             flexDirection: 'column',
             gap: 6,
+            boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.9)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{
@@ -184,7 +186,7 @@ function ProblemSlide({ ex }) {
       overflowX: 'hidden',
       padding: 'clamp(10px, 2vw, 16px) clamp(12px, 3vw, 32px) 12px',
       gap: 10,
-      background: '#fff',
+      background: '#ece9d8',
     }}>
 
       {/* Description */}
@@ -200,10 +202,11 @@ function ProblemSlide({ ex }) {
       {/* Function banner */}
       {p.fn && (
         <div style={{
-          background: 'linear-gradient(135deg, #000080 0%, #1084d0 60%, #0050a0 100%)',
+          background: 'linear-gradient(180deg, #1a6bd8 0%, #0050c0 45%, #0050c0 55%, #1462cc 100%)',
           color: '#fff', padding: '10px 28px', textAlign: 'center',
           fontFamily: '"EB Garamond", serif', fontSize: 'clamp(26px, 3vw, 52px)', fontWeight: 800,
           letterSpacing: '0.4px', flexShrink: 0,
+          boxShadow: '0 2px 4px rgba(0,0,0,0.35)',
         }}>
           {p.fn}
         </div>
@@ -213,8 +216,9 @@ function ProblemSlide({ ex }) {
       <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap' }}>
         {facts.map(({ label, value }) => (
           <div key={label} style={{
-            flex: '1 1 120px', background: '#f4f6fb', padding: '8px 14px',
-            border: '1px solid #d1d9f0', borderRadius: 4, minWidth: 0,
+            flex: '1 1 120px', background: '#f3f2ee', padding: '8px 14px',
+            border: '1px solid', borderColor: '#aca899 #fff #fff #aca899',
+            boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.85)', minWidth: 0,
           }}>
             <div style={{
               fontSize: 'clamp(10px, 0.9vw, 12px)', fontWeight: 800, color: '#6b7280',
@@ -224,7 +228,7 @@ function ProblemSlide({ ex }) {
             </div>
             <div style={{
               fontFamily: 'Courier New, monospace', fontSize: 'clamp(14px, 1.6vw, 22px)',
-              fontWeight: 800, color: '#000080', wordBreak: 'break-word',
+              fontWeight: 800, color: '#1460c8', wordBreak: 'break-word',
             }}>
               {value}
             </div>
@@ -355,9 +359,9 @@ function VisualSimulation({ steps, result, rule, graphConfig, chessConfig, graph
           overflowY: 'auto',
           overflowX: 'hidden',
           padding: isNarrow ? '8px' : '10px 8px 10px 10px',
-          background: '#ececec',
-          borderBottom: isNarrow ? '2px solid #b0b0b0' : 'none',
-          borderRight: isNarrow ? 'none' : '2px solid #b0b0b0',
+          background: '#ece9d8',
+          borderBottom: isNarrow ? '2px solid #aca899' : 'none',
+          borderRight: isNarrow ? 'none' : '2px solid #aca899',
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: isNarrow ? 'center' : 'flex-start',
@@ -425,7 +429,7 @@ function VariantTabs({ variants, graphConfig }) {
 
 function SimulationSlide({ ex }) {
   return (
-    <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#fff' }}>
+    <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#ece9d8' }}>
       {ex.hasVariants
         ? <VariantTabs variants={ex.variants} graphConfig={ex.graph} />
         : (
@@ -467,15 +471,16 @@ export default function App() {
   return (
     <div style={{
       width: '100vw', height: '100dvh', display: 'flex', flexDirection: 'column',
-      background: '#e8e8e8', overflow: 'hidden', margin: 0, padding: 0,
+      background: '#ece9d8', overflow: 'hidden', margin: 0, padding: 0,
     }}>
 
-      {/* ── Compact header ── */}
+      {/* ── Compact header (XP Luna title bar) ── */}
       <div style={{
-        background: hdrBg,
+        background: 'linear-gradient(180deg, #1a6bd8 0%, #0050c0 45%, #0050c0 55%, #1462cc 100%)',
         padding: '5px 12px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexShrink: 0, flexWrap: 'wrap', gap: 4,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.4)',
       }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <span style={{
@@ -517,37 +522,51 @@ export default function App() {
         }
       </div>
 
-      {/* ── Navigation bar ── */}
+      {/* ── Navigation bar (XP taskbar style) ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '5px 8px', flexShrink: 0, background: '#d8d8d8',
-        borderTop: '1px solid #b0b0b0', gap: 6,
+        padding: '4px 8px', flexShrink: 0,
+        background: 'linear-gradient(180deg, #f5f4f1 0%, #e3e1da 100%)',
+        borderTop: '2px solid #aca899', gap: 6,
       }}>
         <button onClick={prev} disabled={idx === 0} style={{
           fontSize: 'clamp(11px, 1.3vw, 17px)', fontWeight: 800,
-          padding: '4px 12px', cursor: idx === 0 ? 'default' : 'pointer',
-          background: idx === 0 ? '#c8c8c8' : '#fff', flexShrink: 0,
-          border: '1px solid #999', color: idx === 0 ? '#999' : '#000080',
+          padding: '4px 14px', cursor: idx === 0 ? 'default' : 'pointer',
+          background: idx === 0
+            ? '#d4d0c8'
+            : 'linear-gradient(180deg, #f5f4f1 0%, #dedad2 100%)',
+          flexShrink: 0,
+          border: '2px solid',
+          borderColor: idx === 0 ? '#aca899' : '#fff #aca899 #aca899 #fff',
+          color: idx === 0 ? '#888' : '#1460c8',
           fontFamily: 'Tahoma, Arial, sans-serif',
+          boxShadow: idx === 0 ? 'none' : 'inset 1px 1px 0 rgba(255,255,255,0.9)',
         }}>
-          ◀ Prev
+          Prev
         </button>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flex: 1, minWidth: 0, overflow: 'hidden' }}>
           <SlideDots current={idx} onChange={setIdx} />
-          <span style={{ fontSize: 10, fontWeight: 600, color: '#666', fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap' }}>
-            □ = Problem &nbsp;·&nbsp; ● = Simulation
+          <span style={{ fontSize: 10, fontWeight: 600, color: '#555', fontFamily: 'Tahoma, Arial, sans-serif', whiteSpace: 'nowrap' }}>
+            Square = Problem &nbsp;·&nbsp; Circle = Simulation
           </span>
         </div>
 
         <button onClick={next} disabled={idx === TOTAL - 1} style={{
           fontSize: 'clamp(11px, 1.3vw, 17px)', fontWeight: 800,
-          padding: '4px 12px', cursor: idx === TOTAL - 1 ? 'default' : 'pointer',
-          background: idx === TOTAL - 1 ? '#c8c8c8' : '#000080', flexShrink: 0,
-          border: '1px solid #999', color: idx === TOTAL - 1 ? '#999' : '#fff',
+          padding: '4px 14px', cursor: idx === TOTAL - 1 ? 'default' : 'pointer',
+          background: idx === TOTAL - 1
+            ? '#d4d0c8'
+            : 'linear-gradient(180deg, #1a6bd8 0%, #0050c0 100%)',
+          flexShrink: 0,
+          border: '2px solid',
+          borderColor: idx === TOTAL - 1 ? '#aca899' : '#fff #0038a0 #0038a0 #fff',
+          color: idx === TOTAL - 1 ? '#888' : '#fff',
           fontFamily: 'Tahoma, Arial, sans-serif',
+          boxShadow: idx === TOTAL - 1 ? 'none' : 'inset 1px 1px 0 rgba(255,255,255,0.3)',
+          textShadow: idx === TOTAL - 1 ? 'none' : '1px 1px 1px rgba(0,0,0,0.5)',
         }}>
-          Next ▶
+          Next
         </button>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const TYPE_CONFIG = {
-  move:   { accent: '#166534', bg: '#dcfce7', border: '#16a34a', badge: '✓ MOVE' },
-  reject: { accent: '#92400e', bg: '#fef9c3', border: '#ca8a04', badge: '✗ STAY' },
-  stop:   { accent: '#991b1b', bg: '#fee2e2', border: '#dc2626', badge: '■ STOP' },
-  goal:   { accent: '#1e40af', bg: '#dbeafe', border: '#2563eb', badge: '★ GOAL' },
+  move:   { accent: '#166534', bg: '#dcfce7', border: '#16a34a', badge: 'MOVE' },
+  reject: { accent: '#92400e', bg: '#fef9c3', border: '#ca8a04', badge: 'STAY' },
+  stop:   { accent: '#991b1b', bg: '#fee2e2', border: '#dc2626', badge: 'STOP' },
+  goal:   { accent: '#1e40af', bg: '#dbeafe', border: '#2563eb', badge: 'GOAL' },
 };
 
 // Build a flat cursor map:
@@ -77,9 +77,9 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
 
   // Phase pill label
   const phasePill = !phase ? null
-    : phase.type === 'state'    ? '📍 State'
-    : phase.type === 'decision' ? '✅ Decision'
-    : `⚙️ Check ${phase.checkIdx + 1} / ${phase.total}`;
+    : phase.type === 'state'    ? 'State'
+    : phase.type === 'decision' ? 'Decision'
+    : `Check ${phase.checkIdx + 1} / ${phase.total}`;
 
   const btn = (label, onClick, disabled, primary = false) => (
     <button key={label} onClick={onClick} disabled={disabled} style={{
@@ -98,18 +98,20 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
       {/* Rule */}
       {rule && (
         <div style={{
-          background: '#fffbeb', borderBottom: '2px solid #d97706',
+          background: '#fef3cd', borderBottom: '2px solid #c9860c',
           padding: '7px 16px', fontSize: 'clamp(12px, 1.25vw, 17px)',
           fontWeight: 700, flexShrink: 0, fontFamily: 'Tahoma, Arial, sans-serif', color: '#78350f',
         }}>
-          <span style={{ color: '#b45309', fontWeight: 800 }}>Rule: </span>{rule}
+          <span style={{ color: '#8b5000', fontWeight: 800 }}>Rule: </span>{rule}
         </div>
       )}
 
-      {/* Controls */}
+      {/* Controls — XP toolbar */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '5px 10px', background: '#f4f4f4', borderBottom: '1px solid #ddd',
+        padding: '4px 8px',
+        background: 'linear-gradient(180deg, #f5f4f1 0%, #e8e6df 100%)',
+        borderBottom: '2px solid #aca899',
         flexShrink: 0, gap: 8, flexWrap: 'wrap',
       }}>
         {/* Counter + phase pill */}
@@ -144,7 +146,7 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
       {/* Log */}
       <div style={{
         flex: 1, overflowY: 'auto', padding: '12px 14px',
-        background: '#f8f9fa', display: 'flex', flexDirection: 'column', gap: 10,
+        background: '#ece9d8', display: 'flex', flexDirection: 'column', gap: 10,
       }}>
 
         {cursor === 0 && (
@@ -262,16 +264,18 @@ export default function SimulationPanel({ steps, result, rule, onActiveIdxChange
         {/* Result */}
         {atEnd && result && (
           <div style={{
-            border: `3px solid ${result.reached ? '#1d4ed8' : '#dc2626'}`,
+            border: `2px solid ${result.reached ? '#1d4ed8' : '#dc2626'}`,
+            borderStyle: 'solid',
             background: result.reached ? '#dbeafe' : '#fee2e2',
-            borderRadius: 6, padding: '16px 20px', flexShrink: 0,
+            padding: '16px 20px', flexShrink: 0,
+            boxShadow: 'inset 1px 1px 0 rgba(255,255,255,0.8), inset -1px -1px 0 rgba(0,0,0,0.15)',
           }}>
             <div style={{
               fontWeight: 900, fontSize: 'clamp(15px, 1.6vw, 22px)',
               color: result.reached ? '#1d4ed8' : '#dc2626', marginBottom: 6,
               fontFamily: 'Tahoma, Arial, sans-serif',
             }}>
-              {result.reached ? '★  GOAL REACHED' : '■  ALGORITHM TERMINATED'}
+              {result.reached ? 'GOAL REACHED' : 'ALGORITHM TERMINATED'}
             </div>
             <div style={{
               fontFamily: 'Courier New, monospace',
