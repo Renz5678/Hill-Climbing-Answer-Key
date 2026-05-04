@@ -319,7 +319,7 @@ export const exercises = [
     },
     hasVariants: false,
     steps: ex3Steps,
-    result: { text: 'x = 3,  f(x) = 1,  t = 30 ms', reached: false, note: 'Stopped at local minimum — goal f = 0 has no real solution (discriminant < 0). Time was NOT the limiting factor.' },
+    result: { text: 'x = 3,  f(x) = 1,  t = 50 ms', reached: false, note: 'Stopped at local minimum — goal f = 0 has no real solution (discriminant < 0). Time was NOT the limiting factor.' },
     followUp: 'Did the algorithm find the minimum within the time limit? If not, at what point did it terminate, and how much time would full convergence require?',
   },
   {
